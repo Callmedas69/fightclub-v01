@@ -34,6 +34,8 @@ export const BackWild = localFont({
 });
 
 export default function MintPhase() {
+  const communityPhaseId = "0n";
+  const publicPhaseId = "1n";
   const account = useActiveAccount();
 
   const contract = getContract({
@@ -52,7 +54,7 @@ export default function MintPhase() {
     error: communityPhaseError,
   } = useReadContract(getClaimConditionById, {
     contract: contract,
-    conditionId: 0n, // Community Phase ID
+    conditionId: BigInt(communityPhaseId), // Community Phase ID
   });
 
   const {
@@ -61,7 +63,7 @@ export default function MintPhase() {
     error: publicPhaseError,
   } = useReadContract(getClaimConditionById, {
     contract: contract,
-    conditionId: 1n, // Public Phase ID
+    conditionId: BigInt(publicPhaseId), // Public Phase ID
   });
 
   const [quantityCommunityMint, setQuantityCommunityMint] = useState(1);
@@ -247,15 +249,10 @@ export default function MintPhase() {
                           setQuantityCommunityMint(1);
                           setCommunityClaimed(true); // Update claimed status
                         }}
-                        onTransactionError={(error: unknown) => {
+                        onError={(error: unknown) => {
                           console.error("Transaction Error:", error);
                           alert("Transaction Failed!");
                         }}
-                        disabled={
-                          !isCommunityPhaseActive ||
-                          communityPhaseLoading ||
-                          !!communityPhaseError // Convert error to boolean
-                        }
                         className={`w-full ${
                           isCommunityPhaseActive && !communityClaimed
                             ? "bg-green-200 hover:bg-green-200"
@@ -376,18 +373,11 @@ export default function MintPhase() {
                           setQuantityPublicMint(1);
                           setPublicClaimed(true); // Update claimed status
                         }}
-                        onTransactionError={(error: unknown) => {
+                        onError={(error: unknown) => {
                           // Change 'any' to 'unknown'
                           console.error("Transaction Error:", error);
                           alert("Transaction Failed!");
                         }}
-                        disabled={
-                          !isPublicPhaseActive ||
-                          publicPhaseLoading ||
-                          publicPhaseError ||
-                          publicClaimed || // Disable if already claimed
-                          quantityPublicMint < 1 // Disable if quantity is less than 1
-                        }
                         className={`w-full ${
                           isPublicPhaseActive && !publicClaimed
                             ? "bg-green-500 hover:bg-green-600"
