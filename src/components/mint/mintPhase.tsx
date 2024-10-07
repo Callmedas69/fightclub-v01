@@ -34,8 +34,8 @@ export const BackWild = localFont({
 });
 
 export default function MintPhase() {
-  const communityPhaseId = "0n";
-  const publicPhaseId = "1n";
+  const communityPhaseId = 0n;
+  const publicPhaseId = 1n;
   const account = useActiveAccount();
 
   const contract = getContract({
@@ -54,7 +54,7 @@ export default function MintPhase() {
     error: communityPhaseError,
   } = useReadContract(getClaimConditionById, {
     contract: contract,
-    conditionId: BigInt(communityPhaseId), // Community Phase ID
+    conditionId: communityPhaseId, // Community Phase ID
   });
 
   const {
@@ -63,7 +63,7 @@ export default function MintPhase() {
     error: publicPhaseError,
   } = useReadContract(getClaimConditionById, {
     contract: contract,
-    conditionId: BigInt(publicPhaseId), // Public Phase ID
+    conditionId: publicPhaseId, // Public Phase ID
   });
 
   const [quantityCommunityMint, setQuantityCommunityMint] = useState(1);
